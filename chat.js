@@ -1,31 +1,28 @@
 async function analyzeGold() {
 
-let rsi = Math.floor(Math.random() * 100)
-let macd = Math.random() > 0.5 ? "BUY" : "SELL"
-let adx = Math.floor(Math.random() * 50)
-let trend = Math.random() > 0.5 ? "BUY" : "SELL"
+const chat = document.getElementById("chat")
 
-let signal = "HOLD"
+chat.innerHTML = "Analyzing XAUUSD..."
 
-if (rsi < 30 && macd === "BUY") {
-signal = "BUY"
+const response = await fetch("https://api.openai.com/v1/chat/completions", {
+method: "POST",
+headers: {
+"Content-Type": "application/json",
+"Authorization": "Bearer bc045d74482d4842848d3cf13b3f7992"
+},
+body: JSON.stringify({
+model: "gpt-4o-mini",
+messages: [
+{
+role: "user",
+content: "Give XAUUSD signal using RSI MACD ADX Trend. Answer like: RSI BUY, MACD SELL, ADX STRONG, FINAL SIGNAL BUY with win percentage."
 }
-else if (rsi > 70 && macd === "SELL") {
-signal = "SELL"
-}
+]
+})
+})
 
-let win = Math.floor(60 + Math.random() * 30)
+const data = await response.json()
 
-document.getElementById("chat").innerHTML = `
-<h3>XAUUSD AI Analysis</h3>
+chat.innerHTML = data.choices[0].message.content
 
-RSI : ${rsi} <br>
-MACD : ${macd} <br>
-ADX : ${adx} <br>
-Trend : ${trend} <br><br>
-
-<h2>${signal}</h2>
-
-Win Probability : ${win}%
-`
 }
